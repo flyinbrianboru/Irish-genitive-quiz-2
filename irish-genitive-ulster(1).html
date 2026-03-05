@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ga">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>An Ginideach — Ulster Irish</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400;1,600&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0f0d;
+    --card: #0f1512;
+    --card-border: #1a2420;
+    --text: #dde8e2;
+    --muted: #5a7060;
+    --dim: #3a4f42;
+    --gold: #c8b86a;
+    --gold-dark: #7a6b20;
+    --green: #4ade80;
+    --green-bg: #071a10;
+    --green-border: #154a25;
+    --amber: #fbbf24;
+    --amber-bg: #1a1400;
+    --amber-border: #4a3800;
+    --red: #f87171;
+    --red-bg: #1a0808;
+    --red-border: #4a1515;
+    --eng-bg: #0d1a12;
+    --eng-border: #1a2e20;
+    --note-bg: #0e1a10;
+    --note-border: #1e3522;
+    --note-text: #7ab88a;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+  .header { text-align: center; margin-bottom: 1.8rem; max-width: 580px; width: 100%; }
+  .header-eyebrow { font-size: 0.65rem; letter-spacing: 0.28em; color: var(--muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.7rem, 6vw, 2.5rem); font-weight: 600; color: var(--text); letter-spacing: -0.01em; line-height: 1.1; }
+  .header-sub { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 3vw, 1.25rem); font-style: italic; color: var(--gold); margin-top: 0.3rem; }
+  .header-rule { width: 50px; height: 1.5px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); margin: 0.8rem auto; }
+  .header p { font-size: 0.9rem; color: var(--muted); font-style: italic; }
+  .scorebar { display: flex; gap: 1.5rem; font-size: 0.88rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .scorebar strong { color: var(--text); }
+  .cats { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; margin-bottom: 2rem; max-width: 600px; width: 100%; }
+  .cat-btn { padding: 0.28rem 0.8rem; border-radius: 2rem; font-size: 0.7rem; letter-spacing: 0.06em; font-family: 'Crimson Pro', serif; background: transparent; color: var(--muted); border: 1px solid #1a2a20; cursor: pointer; transition: all 0.18s ease; -webkit-tap-highlight-color: transparent; }
+  .cat-btn:active { transform: scale(0.96); }
+  .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 1.1rem; padding: 1.8rem; max-width: 560px; width: 100%; animation: fadeUp 0.25s ease forwards; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .badge { display: inline-block; padding: 0.18rem 0.7rem; border-radius: 1rem; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1.2rem; }
+  .ulster-note { background: var(--note-bg); border: 1px solid var(--note-border); border-radius: 0.45rem; padding: 0.5rem 0.8rem; font-size: 0.78rem; color: var(--note-text); font-style: italic; margin-bottom: 1rem; line-height: 1.4; }
+  .ulster-note strong { font-style: normal; color: #9dd4a8; }
+  .english-box { background: var(--eng-bg); border: 1px solid var(--eng-border); border-radius: 0.55rem; padding: 0.75rem 0.9rem; margin-bottom: 1.1rem; }
+  .english-label { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.25rem; }
+  .english-text { font-size: 0.95rem; color: #9ab8a0; font-style: italic; line-height: 1.5; }
+  .irish-question { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.25rem, 4.5vw, 1.65rem); font-style: italic; color: var(--text); line-height: 1.5; margin-bottom: 1.3rem; }
+  .input-row { display: flex; gap: 0.6rem; }
+  .answer-input { flex: 1; background: var(--bg); border: 1px solid #1a2a1a; border-radius: 0.5rem; padding: 0.65rem 0.9rem; color: var(--text); font-family: 'Crimson Pro', serif; font-size: 1rem; -webkit-appearance: none; transition: border-color 0.15s; }
+  .answer-input:focus { outline: none; border-color: var(--gold-dark); }
+  .answer-input::placeholder { color: var(--dim); }
+  .submit-btn { background: var(--gold-dark); color: #f0ead8; border: none; border-radius: 0.5rem; padding: 0.65rem 1.2rem; font-family: 'Crimson Pro', serif; font-weight: 600; font-size: 0.88rem; cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s; }
+  .submit-btn:active { opacity: 0.8; }
+  .result-box { border-radius: 0.65rem; padding: 1.1rem; margin-bottom: 0.9rem; animation: fadeUp 0.2s ease forwards; }
+  .result-box.correct  { background: var(--green-bg);  border: 1px solid var(--green-border); }
+  .result-box.close    { background: var(--amber-bg);  border: 1px solid var(--amber-border); }
+  .result-box.wrong    { background: var(--red-bg);    border: 1px solid var(--red-border); }
+  .result-label { font-weight: 600; font-size: 1rem; margin-bottom: 0.3rem; }
+  .result-box.correct  .result-label { color: var(--green); }
+  .result-box.close    .result-label { color: var(--amber); }
+  .result-box.wrong    .result-label { color: var(--red); }
+  .result-answer { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--text); margin-bottom: 0.3rem; }
+  .result-reminder { font-size: 0.82rem; color: var(--amber); margin-bottom: 0.3rem; font-style: italic; }
+  .result-explanation { font-size: 0.82rem; color: #7a9a80; line-height: 1.5; }
+  .next-btn { width: 100%; background: #0d1a10; border: 1px solid #1a2a1a; border-radius: 0.5rem; padding: 0.65rem; color: var(--gold-dark); font-family: 'Crimson Pro', serif; font-size: 0.92rem; font-weight: 600; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s; }
+  .next-btn:active { opacity: 0.75; }
+  .progress-wrap { max-width: 560px; width: 100%; margin-top: 1.3rem; }
+  .progress-track { height: 2px; background: #101a12; border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #2a4a20, var(--gold-dark), var(--gold)); border-radius: 2px; transition: width 0.4s ease; }
+  .finish-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 1.1rem; padding: 2.5rem 2rem; max-width: 480px; width: 100%; text-align: center; animation: fadeUp 0.25s ease forwards; }
+  .finish-emoji { font-size: 2.8rem; margin-bottom: 0.8rem; }
+  .finish-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-style: italic; color: var(--gold); margin-bottom: 0.3rem; }
+  .finish-sub { font-style: italic; color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+  .finish-pct { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 600; line-height: 1; margin-bottom: 0.3rem; }
+  .finish-tally { color: var(--muted); font-size: 0.88rem; margin-bottom: 2rem; }
+  .restart-btn { background: var(--gold-dark); color: #f0ead8; border: none; border-radius: 2rem; padding: 0.7rem 2rem; font-family: 'Crimson Pro', serif; font-weight: 600; font-size: 0.95rem; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .restart-btn:active { opacity: 0.8; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Gaeilge Uladh · Ulster Irish</div>
+  <h1>An Tuiseal Ginideach</h1>
+  <div class="header-sub">Sraith Nua — New Series</div>
+  <div class="header-rule"></div>
+  <p>50 questions · Ulster Irish vocabulary throughout</p>
+</div>
+
+<div class="scorebar">
+  <span>Question <strong id="qnum">1</strong> / <strong id="qtotal">50</strong></span>
+  <span>Score <strong id="score-display">0/0</strong></span>
+</div>
+
+<div class="cats" id="cat-buttons"></div>
+
+<div class="card" id="question-card">
+  <div class="badge" id="cat-badge"></div>
+  <div class="ulster-note hidden" id="ulster-note"></div>
+  <div class="english-box">
+    <div class="english-label">English</div>
+    <div class="english-text" id="english-text"></div>
+  </div>
+  <div class="irish-question" id="irish-question"></div>
+  <div class="input-row" id="input-row">
+    <input class="answer-input" id="answer-input" type="text" placeholder="Freagra…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <button class="submit-btn" id="submit-btn">Seol →</button>
+  </div>
+  <div id="result-area" class="hidden">
+    <div class="result-box" id="result-box">
+      <div class="result-label" id="result-label"></div>
+      <div class="result-answer hidden" id="result-answer"></div>
+      <div class="result-reminder hidden" id="result-reminder"></div>
+      <div class="result-explanation" id="result-explanation"></div>
+    </div>
+    <button class="next-btn" id="next-btn">Ceist eile →</button>
+  </div>
+</div>
+
+<div class="finish-card hidden" id="finish-card">
+  <div class="finish-emoji" id="finish-emoji"></div>
+  <div class="finish-title" id="finish-title"></div>
+  <div class="finish-sub" id="finish-sub"></div>
+  <div class="finish-pct" id="finish-pct"></div>
+  <div class="finish-tally" id="finish-tally"></div>
+  <button class="restart-btn" id="restart-btn">Arís — Try Again</button>
+</div>
+
+<div class="progress-wrap" id="progress-wrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<script>
+// ── MATCHING LOGIC ────────────────────────────────────────────────────────
+
+// Strip fadas: á→a, é→e, í→i, ó→o, ú→u
+function stripFadas(s) {
+  return s.replace(/[áÁ]/g,'a').replace(/[éÉ]/g,'e').replace(/[íÍ]/g,'i').replace(/[óÓ]/g,'o').replace(/[úÚ]/g,'u');
+}
+
+// Strip lenition (leading h after consonant is lenition marker in Irish)
+// Also strips séimhiú dots if present
+function stripLenition(s) {
+  // Remove 'h' that follows a consonant at start of word (lenition)
+  return s.replace(/\b([bcdfgmpst])h/gi, '$1');
+}
+
+function clean(s) {
+  return s.trim().toLowerCase().replace(/[^a-záéíóúÁÉÍÓÚ\s]/g, '');
+}
+
+// Levenshtein distance
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, (_, i) => [i]);
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i-1] === b[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+
+// Returns: { result: 'correct' | 'close' | 'wrong', reminder: string }
+// 'close' = correct but missing fada or lenition mark, counted as correct in score
+// For multi-word answers, check word by word
+function checkAnswer(userRaw, correctRaw) {
+  const user    = clean(userRaw);
+  const correct = clean(correctRaw);
+
+  // Exact match
+  if (user === correct) return { result: 'correct', reminder: '' };
+
+  const userWords    = user.split(/\s+/);
+  const correctWords = correct.split(/\s+/);
+
+  // ── Check fada-only difference ──
+  if (stripFadas(user) === stripFadas(correct)) {
+    // Find which words differ
+    const missing = [];
+    correctWords.forEach((cw, i) => {
+      const uw = userWords[i] || '';
+      if (uw !== cw && stripFadas(uw) === stripFadas(cw)) {
+        // Find missing fadas
+        for (let k = 0; k < cw.length; k++) {
+          if (cw[k] !== (uw[k]||'') && stripFadas(cw[k]) === (uw[k]||'')) {
+            missing.push(cw[k]);
+          }
+        }
+      }
+    });
+    const unique = [...new Set(missing)];
+    return {
+      result: 'close',
+      reminder: `Almost! You forgot the fada on: ${unique.join(', ')} — correct spelling: ${correctRaw}`
+    };
+  }
+
+  // ── Check lenition-only difference ──
+  if (stripFadas(stripLenition(user)) === stripFadas(stripLenition(correct)) &&
+      stripLenition(user) === stripLenition(correct)) {
+    return {
+      result: 'close',
+      reminder: `Almost! You forgot the lenition (séimhiú) — correct spelling: ${correctRaw}`
+    };
+  }
+
+  // ── Check fada + lenition combined ──
+  if (stripFadas(stripLenition(user)) === stripFadas(stripLenition(correct))) {
+    return {
+      result: 'close',
+      reminder: `Almost! Watch your fadas and lenition — correct spelling: ${correctRaw}`
+    };
+  }
+
+  // ── One-typo tolerance (Levenshtein distance = 1) ──
+  // Compare stripped versions to avoid penalising fada/lenition twice
+  const userStripped    = stripFadas(stripLenition(user));
+  const correctStripped = stripFadas(stripLenition(correct));
+
+  if (levenshtein(userStripped, correctStripped) === 1) {
+    // Also check if the original had fada/lenition issues on top
+    const hasFadaIssue    = stripFadas(user) !== user && stripFadas(correct) !== correct && stripFadas(user) !== stripFadas(correct);
+    const hasLenitionIssue = stripLenition(user) !== user && stripLenition(correct) !== correct;
+    let reminder = `Almost! One small typo — correct spelling: ${correctRaw}`;
+    if (hasFadaIssue || hasLenitionIssue) {
+      reminder = `Almost! One typo and watch your fadas/lenition — correct spelling: ${correctRaw}`;
+    }
+    return { result: 'close', reminder };
+  }
+
+  // ── Word-by-word check for multi-word answers ──
+  if (correctWords.length > 1 && userWords.length === correctWords.length) {
+    let allClose = true;
+    let reminders = [];
+    for (let i = 0; i < correctWords.length; i++) {
+      const uw = userWords[i], cw = correctWords[i];
+      if (uw === cw) continue;
+      const uws = stripFadas(stripLenition(uw));
+      const cws = stripFadas(stripLenition(cw));
+      if (uws === cws) {
+        reminders.push(`fada/lenition on "${cw}"`);
+      } else if (levenshtein(uws, cws) <= 1) {
+        reminders.push(`spelling of "${cw}"`);
+      } else {
+        allClose = false; break;
+      }
+    }
+    if (allClose && reminders.length > 0) {
+      return { result: 'close', reminder: `Almost! Watch: ${reminders.join(', ')} — correct: ${correctRaw}` };
+    }
+    if (allClose && reminders.length === 0) {
+      return { result: 'correct', reminder: '' };
+    }
+  }
+
+  return { result: 'wrong', reminder: '' };
+}
+
+// ── QUESTIONS ─────────────────────────────────────────────────────────────
+const ALL_QUESTIONS = [
+  // VERBAL NOUNS
+  { category:"Verbal Noun", english:"The boy was cutting turf. (móin = turf/peat, feminine 3rd decl.)", irish:"Bhí an gasúr ag gearradh ___", answer:"móna", explanation:"3rd declension feminine: móin → móna.", ulster:"'Gasúr' = boy in Ulster Irish." },
+  { category:"Verbal Noun", english:"The girl was reading a story. (scéal = story, masculine 1st decl.)", irish:"Bhí an ghirseach ag léamh ___", answer:"scéil", explanation:"1st declension masculine: scéal → scéil (slenderise).", ulster:"'Girseach' = girl in Ulster Irish." },
+  { category:"Verbal Noun", english:"She was feeding the dog. (an madadh = the dog, masculine 1st decl.)", irish:"Bhí sí ag beathú ___", answer:"an mhadaidh", explanation:"1st declension masculine: madadh → madaidh (slenderise) + lenition after 'an'.", ulster:"Ulster uses 'madadh' rather than 'madra' for dog." },
+  { category:"Verbal Noun", english:"He was cutting the grass. (an féar = the grass, masculine 1st decl.)", irish:"Bhí sé ag gearradh ___", answer:"an fhéir", explanation:"1st declension masculine: féar → féir (slenderise) + lenition after 'an'.", ulster:"" },
+  { category:"Verbal Noun", english:"He was digging a hole. (poll = hole, masculine 1st decl.)", irish:"Bhí sé ag tochailt ___", answer:"poill", explanation:"1st declension masculine: poll → poill (slenderise).", ulster:"" },
+  { category:"Verbal Noun", english:"They were building a bridge. (droichead = bridge, masculine 1st decl.)", irish:"Bhí siad ag tógáil ___", answer:"droichid", explanation:"1st declension masculine: droichead → droichid (slenderise).", ulster:"" },
+  { category:"Verbal Noun", english:"She was washing clothes. (éadaí = clothes, plural 4th decl.)", irish:"Bhí sí ag ní ___", answer:"éadaí", explanation:"4th declension plural: éadaí → éadaí (no change).", ulster:"" },
+  { category:"Verbal Noun", english:"He was making a fire. (tine = fire, feminine 4th decl.)", irish:"Bhí sé ag déanamh ___", answer:"tine", explanation:"4th declension feminine: tine → tine (no change — ends in vowel).", ulster:"" },
+  { category:"Verbal Noun", english:"I was learning a poem. (dán = poem, masculine 1st decl.)", irish:"Bhí mé ag foghlaim ___", answer:"dáin", explanation:"1st declension masculine: dán → dáin (slenderise).", ulster:"" },
+  { category:"Verbal Noun", english:"She was carrying a bag. (mála = bag, masculine 4th decl.)", irish:"Bhí sí ag iompar ___", answer:"mála", explanation:"4th declension masculine: mála → mála (no change — ends in vowel).", ulster:"" },
+  { category:"Verbal Noun", english:"He was drinking water. (uisce = water, masculine 4th decl.)", irish:"Bhí sé ag ól ___", answer:"uisce", explanation:"4th declension: uisce → uisce (no change).", ulster:"" },
+  { category:"Verbal Noun", english:"We were singing a hymn. (iomann = hymn, masculine 1st decl.)", irish:"Bhíomar ag canadh ___", answer:"iomnainn", explanation:"1st declension masculine: iomann → iomnainn (slenderise).", ulster:"" },
+  { category:"Verbal Noun", english:"She was telling a story. (scéal = story, masculine 1st decl.)", irish:"Bhí sí ag insint ___", answer:"scéil", explanation:"1st declension masculine: scéal → scéil (slenderise).", ulster:"" },
+  { category:"Verbal Noun", english:"He was milking the cow. (an bhó = the cow, irregular feminine)", irish:"Bhí sé ag crú ___", answer:"na bó", explanation:"Irregular feminine: bó → bó (no change in genitive). Feminine article 'na'.", ulster:"" },
+
+  // COMPOUND PREPOSITIONS
+  { category:"Compound Preposition", english:"During the summer. (an samhradh = the summer, masculine)", irish:"le linn ___ tsamhraidh", answer:"an", explanation:"Masculine genitive: le linn an tsamhraidh. 'an' + lenition + slenderise.", ulster:"" },
+  { category:"Compound Preposition", english:"Because of the rain. (an bháisteach = the rain, feminine)", irish:"de bharr ___ báistí", answer:"na", explanation:"Feminine genitive: de bharr na báistí. Feminine article 'na'.", ulster:"" },
+  { category:"Compound Preposition", english:"In front of the school. (an scoil = the school, feminine)", irish:"os comhair ___ scoile", answer:"na", explanation:"Feminine genitive: os comhair na scoile. Feminine article 'na'.", ulster:"" },
+  { category:"Compound Preposition", english:"Throughout the winter. (an geimhreadh = the winter, masculine)", irish:"i gcaitheamh ___ gheimhridh", answer:"an", explanation:"Masculine genitive: i gcaitheamh an gheimhridh. 'an' + lenition + slenderise.", ulster:"" },
+  { category:"Compound Preposition", english:"On behalf of the people. (na daoine = the people, plural)", irish:"thar ceann ___ ndaoine", answer:"na", explanation:"Plural genitive: thar ceann na ndaoine. Plural article 'na' + eclipsis.", ulster:"" },
+  { category:"Compound Preposition", english:"In the middle of the night. (an oíche = the night, feminine)", irish:"i lár ___ hoíche", answer:"na", explanation:"Feminine genitive: i lár na hoíche. 'na' + h-prefix before vowel.", ulster:"" },
+  { category:"Compound Preposition", english:"Above the mountain. (an sliabh = the mountain, masculine)", irish:"os cionn ___ tsléibhe", answer:"an", explanation:"Masculine genitive: os cionn an tsléibhe. sliabh → sléibhe + lenition.", ulster:"" },
+  { category:"Compound Preposition", english:"Among the women. (na mná = the women, plural)", irish:"i measc ___ mban", answer:"na", explanation:"Plural genitive: i measc na mban. Plural article 'na' + eclipsis.", ulster:"" },
+  { category:"Compound Preposition", english:"Beside the lake. (an loch = the lake, masculine)", irish:"in aice ___ locha", answer:"an", explanation:"Masculine genitive: in aice an locha. loch → locha (1st decl. add -a).", ulster:"" },
+  { category:"Compound Preposition", english:"Within a month. (mí = a month, feminine, no article)", irish:"faoi cheann ___", answer:"míosa", explanation:"3rd declension feminine: mí → míosa. No article for indefinite noun.", ulster:"" },
+  { category:"Compound Preposition", english:"After the harvest. (an fómhar = the harvest, masculine)", irish:"i ndiaidh ___ fhómhair", answer:"an", explanation:"Masculine genitive: i ndiaidh an fhómhair. fómhar → fómhair + lenition.", ulster:"'I ndiaidh' = after, very common in Ulster Irish." },
+  { category:"Compound Preposition", english:"Across the river. (an abhainn = the river, feminine)", irish:"trasna ___ habhann", answer:"na", explanation:"Feminine genitive: trasna na habhann. 'na' + h-prefix before vowel.", ulster:"" },
+  { category:"Compound Preposition", english:"According to the priest. (an sagart = the priest, masculine)", irish:"de réir ___ tsagairt", answer:"an", explanation:"Masculine genitive: de réir an tsagairt. sagart → sagairt (slenderise) + lenition.", ulster:"" },
+
+  // DECLENSIONS
+  { category:"Declension", english:"What is the genitive of fear (man)? — 1st declension masculine", irish:"fear → ___", answer:"fir", explanation:"1st declension masculine: fear → fir (slenderise). E.g. mac an fhir — the man's son.", ulster:"" },
+  { category:"Declension", english:"What is the genitive of fuinneog (window)? — ension 2nd declension feminine", irish:"fuinneog → ___", answer:"fuinneoige", explanation:"2nd declension feminine: fuinneog → fuinneoige (slenderise + -e).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of teach (house)? — irregular", irish:"teach → ___", answer:"tí", explanation:"Irregular: teach → tí. E.g. bean an tí — the woman of the house.", ulster:"" },
+  { category:"Declension", english:"What is the genitive of abhainn (river)? — 5th declension feminine", irish:"abhainn → ___", answer:"abhann", explanation:"5th declension feminine: abhainn → abhann. E.g. bruach na habhann.", ulster:"" },
+  { category:"Declension", english:"What is the genitive of páirc (field)? — 2nd declension feminine", irish:"páirc → ___", answer:"páirce", explanation:"2nd declension feminine: páirc → páirce (already slender, add -e).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of tobar (well)? — 1st declension masculine", irish:"tobar → ___", answer:"tobair", explanation:"1st declension masculine: tobar → tobair (slenderise).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of oíche (night)? — 4th declension feminine", irish:"oíche → ___", answer:"oíche", explanation:"4th declension: oíche → oíche (no change — ends in vowel).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of coill (wood/forest)? — 2nd declension feminine", irish:"coill → ___", answer:"coille", explanation:"2nd declension feminine: coill → coille (add -e).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of samhradh (summer)? — 1st declension masculine", irish:"samhradh → ___", answer:"samhraidh", explanation:"1st declension masculine: samhradh → samhraidh (slenderise).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of geimhreadh (winter)? — 1st declension masculine", irish:"geimhreadh → ___", answer:"geimhridh", explanation:"1st declension masculine: geimhreadh → geimhridh (slenderise).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of lá (day)? — irregular", irish:"lá → ___", answer:"lae", explanation:"Irregular: lá → lae. E.g. i lár an lae — in the middle of the day.", ulster:"" },
+  { category:"Declension", english:"What is the genitive of móin (turf/peat)? — 3rd declension feminine", irish:"móin → ___", answer:"móna", explanation:"3rd declension feminine: móin → móna (add -a).", ulster:"Móin (turf/peat) is a very common word in Ulster Irish contexts." },
+  { category:"Declension", english:"What is the genitive of sliabh (mountain)? — 1st declension masculine", irish:"sliabh → ___", answer:"sléibhe", explanation:"1st declension masculine: sliabh → sléibhe (slenderise + -e).", ulster:"" },
+  { category:"Declension", english:"What is the genitive of fómhar (autumn/harvest)? — 1st declension masculine", irish:"fómhar → ___", answer:"fómhair", explanation:"1st declension masculine: fómhar → fómhair (slenderise).", ulster:"" },
+
+  // NOUN PHRASES
+  { category:"Noun Phrase", english:"The man of the house. (an teach = the house, irregular)", irish:"fear ___ tí", answer:"an", explanation:"Masculine genitive: fear an tí. teach → tí (irregular). Masculine article 'an'.", ulster:"" },
+  { category:"Noun Phrase", english:"The middle of the day. (an lá = the day, irregular)", irish:"lár ___ lae", answer:"an", explanation:"Masculine genitive: lár an lae. lá → lae (irregular). Masculine article 'an'.", ulster:"" },
+  { category:"Noun Phrase", english:"The top of the mountain. (an sliabh = the mountain, masculine)", irish:"barr ___ tsléibhe", answer:"an", explanation:"Masculine genitive: barr an tsléibhe. sliabh → sléibhe + lenition.", ulster:"" },
+  { category:"Noun Phrase", english:"The edge of the field. (an pháirc = the field, feminine)", irish:"imeall ___ páirce", answer:"na", explanation:"Feminine genitive: imeall na páirce. Feminine article 'na'.", ulster:"" },
+  { category:"Noun Phrase", english:"The voices of the people. (na daoine = the people, plural)", irish:"guthanna ___ ndaoine", answer:"na", explanation:"Plural genitive: guthanna na ndaoine. Plural article 'na' + eclipsis.", ulster:"" },
+  { category:"Noun Phrase", english:"The end of the summer. (an samhradh = the summer, masculine)", irish:"deireadh ___ tsamhraidh", answer:"an", explanation:"Masculine genitive: deireadh an tsamhraidh. samhradh → samhraidh + lenition.", ulster:"" },
+  { category:"Noun Phrase", english:"The light of the sun. (an ghrian = the sun, feminine)", irish:"solas ___ gréine", answer:"na", explanation:"Feminine genitive: solas na gréine. grian → gréine (2nd decl.). Feminine article 'na'.", ulster:"" },
+  { category:"Noun Phrase", english:"The smell of the sea. (an fharraige = the sea, feminine)", irish:"boladh ___ farraige", answer:"na", explanation:"Feminine genitive: boladh na farraige. Feminine article 'na'.", ulster:"" },
+  { category:"Noun Phrase", english:"The son of the king. (an rí = the king, masculine)", irish:"mac ___ rí", answer:"an", explanation:"Masculine genitive: mac an rí. rí → rí (no change). Masculine article 'an'.", ulster:"" },
+  { category:"Noun Phrase", english:"The colour of the sky. (an spéir = the sky, feminine)", irish:"dath ___ spéire", answer:"na", explanation:"Feminine genitive: dath na spéire. spéir → spéire (2nd decl.). Feminine article 'na'.", ulster:"" },
+  { category:"Noun Phrase", english:"The bank of the river. (an abhainn = the river, feminine)", irish:"bruach ___ habhann", answer:"na", explanation:"Feminine genitive: bruach na habhann. 'na' + h-prefix before vowel.", ulster:"" },
+  { category:"Noun Phrase", english:"The boy's father. (an gasúr = the boy, masculine)", irish:"athair ___ ghasúir", answer:"an", explanation:"Masculine genitive: athair an ghasúir. gasúr → gasúir (slenderise) + lenition.", ulster:"'Gasúr' = boy in Ulster Irish." },
+  { category:"Noun Phrase", english:"The girl's mother. (an ghirseach = the girl, feminine)", irish:"máthair ___ girsí", answer:"na", explanation:"Feminine genitive: máthair na girsí. girseach → girsí (2nd decl.). Feminine article 'na'.", ulster:"'Girseach' = girl in Ulster Irish." },
+
+  // ARTICLE
+  { category:"Article", english:"The woman of the house. (an teach = the house, masculine irregular)", irish:"bean ___ tí", answer:"an", explanation:"Masculine genitive: bean an tí. teach → tí (irregular). Masculine article 'an'.", ulster:"" },
+  { category:"Article", english:"The sound of the wind. (an ghaoth = the wind, feminine)", irish:"fuaim ___ gaoithe", answer:"na", explanation:"Feminine genitive: fuaim na gaoithe. Feminine article 'na'.", ulster:"" },
+  { category:"Article", english:"The children's game. (na páistí = the children, plural)", irish:"cluiche ___ bpáistí", answer:"na", explanation:"Plural genitive: cluiche na bpáistí. Plural article 'na' + eclipsis.", ulster:"" },
+  { category:"Article", english:"The wheel of the car. (an carr = the car, masculine)", irish:"roth ___ chairr", answer:"an", explanation:"Masculine genitive: roth an chairr. carr → cairr (slenderise) + lenition.", ulster:"" },
+  { category:"Article", english:"The songs of the birds. (na héin = the birds, plural)", irish:"amhráin ___ n-éan", answer:"na", explanation:"Plural genitive: amhráin na n-éan. Plural article 'na' + eclipsis.", ulster:"" },
+  { category:"Article", english:"The smell of the turf. (an mhóin = the turf, feminine)", irish:"boladh ___ móna", answer:"na", explanation:"Feminine genitive: boladh na móna. móin → móna (3rd decl.). Feminine article 'na'.", ulster:"Turf/peat (móin) is central to Ulster rural life and culture." },
+];
+
+const CATEGORIES = ["All","Verbal Noun","Compound Preposition","Declension","Noun Phrase","Article"];
+const CAT_COLORS = {
+  "Verbal Noun":          { text:"#4ade80", border:"#4ade8040" },
+  "Compound Preposition": { text:"#fb923c", border:"#fb923c40" },
+  "Declension":           { text:"#a78bfa", border:"#a78bfa40" },
+  "Noun Phrase":          { text:"#34d399", border:"#34d39940" },
+  "Article":              { text:"#60a5fa", border:"#60a5fa40" },
+};
+
+let selectedCat = "All";
+let shuffled = [];
+let currentIndex = 0;
+let scoreCorrect = 0;
+let scoreTotal = 0;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function getFiltered() {
+  return selectedCat === "All" ? ALL_QUESTIONS : ALL_QUESTIONS.filter(q => q.category === selectedCat);
+}
+function startQuiz() {
+  shuffled = shuffle(getFiltered());
+  currentIndex = 0; scoreCorrect = 0; scoreTotal = 0;
+  document.getElementById("finish-card").classList.add("hidden");
+  document.getElementById("question-card").classList.remove("hidden");
+  document.getElementById("progress-wrap").classList.remove("hidden");
+  showQuestion();
+}
+function showQuestion() {
+  const q = shuffled[currentIndex];
+  const col = CAT_COLORS[q.category] || { text:"#c9a84c", border:"#c9a84c40" };
+
+  const badge = document.getElementById("cat-badge");
+  badge.textContent = q.category;
+  badge.style.background = col.text + "18";
+  badge.style.color = col.text;
+  badge.style.border = `1px solid ${col.border}`;
+
+  const noteEl = document.getElementById("ulster-note");
+  if (q.ulster && q.ulster.length > 0) {
+    noteEl.innerHTML = "<strong>Ulster note:</strong> " + q.ulster;
+    noteEl.classList.remove("hidden");
+  } else {
+    noteEl.classList.add("hidden");
+  }
+
+  document.getElementById("english-text").textContent = q.english;
+  document.getElementById("irish-question").textContent = q.irish;
+
+  const input = document.getElementById("answer-input");
+  input.value = "";
+  document.getElementById("input-row").classList.remove("hidden");
+  document.getElementById("result-area").classList.add("hidden");
+
+  document.getElementById("qnum").textContent = currentIndex + 1;
+  document.getElementById("qtotal").textContent = shuffled.length;
+  updateScoreDisplay();
+  updateProgress();
+
+  const card = document.getElementById("question-card");
+  card.style.animation = "none"; card.offsetHeight; card.style.animation = "";
+  setTimeout(() => input.focus(), 100);
+}
+function updateScoreDisplay() {
+  const pct = scoreTotal > 0 ? Math.round((scoreCorrect / scoreTotal) * 100) : 0;
+  const el = document.getElementById("score-display");
+  el.textContent = `${scoreCorrect}/${scoreTotal}`;
+  el.style.color = pct >= 70 ? "#4ade80" : pct >= 40 ? "#fb923c" : "#f87171";
+}
+function updateProgress() {
+  document.getElementById("progress-fill").style.width = ((currentIndex / shuffled.length) * 100) + "%";
+}
+function submitAnswer() {
+  const input = document.getElementById("answer-input");
+  const val = input.value;
+  if (!val.trim()) return;
+
+  const q = shuffled[currentIndex];
+  const { result, reminder } = checkAnswer(val, q.answer);
+
+  const isScorePoint = (result === 'correct' || result === 'close');
+  if (isScorePoint) scoreCorrect++;
+  scoreTotal++;
+  updateScoreDisplay();
+
+  document.getElementById("input-row").classList.add("hidden");
+  const resultBox = document.getElementById("result-box");
+  resultBox.className = "result-box " + result;
+
+  const labelEl = document.getElementById("result-label");
+  if (result === 'correct') labelEl.textContent = "✓ Ceart!";
+  else if (result === 'close') labelEl.textContent = "✓ Ceart — ach…";
+  else labelEl.textContent = "✗ Mícheart";
+
+  // Show correct answer only if wrong
+  const answerEl = document.getElementById("result-answer");
+  if (result === 'wrong') {
+    answerEl.textContent = "Freagra: " + q.answer;
+    answerEl.classList.remove("hidden");
+  } else {
+    answerEl.classList.add("hidden");
+  }
+
+  // Show reminder for 'close' answers
+  const reminderEl = document.getElementById("result-reminder");
+  if (result === 'close' && reminder) {
+    reminderEl.textContent = reminder;
+    reminderEl.classList.remove("hidden");
+  } else {
+    reminderEl.classList.add("hidden");
+  }
+
+  document.getElementById("result-explanation").textContent = q.explanation;
+
+  const nextBtn = document.getElementById("next-btn");
+  nextBtn.textContent = (currentIndex + 1 >= shuffled.length) ? "Torthaí — See Results" : "Ceist eile →";
+  document.getElementById("result-area").classList.remove("hidden");
+}
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= shuffled.length) showFinish();
+  else showQuestion();
+}
+function showFinish() {
+  document.getElementById("question-card").classList.add("hidden");
+  document.getElementById("progress-wrap").classList.add("hidden");
+  const pct = scoreTotal > 0 ? Math.round((scoreCorrect / scoreTotal) * 100) : 0;
+  document.getElementById("finish-emoji").textContent = pct >= 80 ? "🌟" : pct >= 55 ? "💪" : "📖";
+  document.getElementById("finish-title").textContent = pct >= 80 ? "Ar fheabhas!" : pct >= 55 ? "Go maith!" : "Lean ar aghaidh!";
+  document.getElementById("finish-sub").textContent = pct >= 80 ? "Excellent!" : pct >= 55 ? "Well done!" : "Keep going!";
+  const pctEl = document.getElementById("finish-pct");
+  pctEl.textContent = pct + "%";
+  pctEl.style.color = pct >= 70 ? "#4ade80" : pct >= 40 ? "#fb923c" : "#f87171";
+  document.getElementById("finish-tally").textContent = `${scoreCorrect} correct out of ${scoreTotal}`;
+  document.getElementById("finish-card").classList.remove("hidden");
+}
+
+// Build category buttons
+const catContainer = document.getElementById("cat-buttons");
+CATEGORIES.forEach(cat => {
+  const btn = document.createElement("button");
+  btn.className = "cat-btn" + (cat === "All" ? " active" : "");
+  btn.textContent = cat;
+  const col = CAT_COLORS[cat];
+  if (cat === "All") {
+    btn.style.background = "#7a6b20";
+    btn.style.color = "#f0ead8";
+    btn.style.border = "1px solid #7a6b20";
+    btn.style.fontWeight = "600";
+  }
+  btn.addEventListener("click", () => {
+    selectedCat = cat;
+    document.querySelectorAll(".cat-btn").forEach(b => {
+      b.classList.remove("active");
+      b.style.background = "transparent";
+      b.style.color = "#5a7060";
+      b.style.border = "1px solid #1a2a20";
+      b.style.fontWeight = "400";
+    });
+    btn.classList.add("active");
+    if (col) {
+      btn.style.background = col.text + "22";
+      btn.style.color = col.text;
+      btn.style.border = `1px solid ${col.border}`;
+    } else {
+      btn.style.background = "#7a6b20";
+      btn.style.color = "#f0ead8";
+      btn.style.border = "1px solid #7a6b20";
+    }
+    btn.style.fontWeight = "600";
+    startQuiz();
+  });
+  catContainer.appendChild(btn);
+});
+
+document.getElementById("submit-btn").addEventListener("click", submitAnswer);
+document.getElementById("answer-input").addEventListener("keydown", e => { if (e.key === "Enter") submitAnswer(); });
+document.getElementById("next-btn").addEventListener("click", nextQuestion);
+document.getElementById("restart-btn").addEventListener("click", startQuiz);
+
+startQuiz();
+</script>
+</body>
+</html>
